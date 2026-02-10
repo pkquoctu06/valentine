@@ -1,141 +1,514 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentine 💖</title>
-
-  <!-- ===== CSS ===== -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentine ❤️</title>
   <style>
+    :root{
+      --bg1:#0f1020;
+      --bg2:#1b1230;
+      --card:#ffffff10;
+      --card2:#ffffff18;
+      --text:#fff;
+      --muted:#d9d9ffcc;
+      --accent:#ff4d8d;
+      --accent2:#ffd1dc;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont;
-      background: radial-gradient(circle at top, #3b1d4a, #0f1020);
-      color:white;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
       min-height:100vh;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1200px 800px at 20% 10%, #ff3d6e22, transparent 60%),
+        radial-gradient(1200px 900px at 80% 30%, #8b5cf622, transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
     }
 
-    .container{
-      max-width:1000px;
-      margin:40px auto;
-      padding:20px;
+    .wrap{
+      position:relative;
+      width:min(980px, 92vw);
+      margin: 52px auto 90px;
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:20px;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: start;
     }
 
     .card{
-      background: rgba(255,255,255,0.08);
-      border-radius:20px;
-      padding:20px;
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-      box-shadow:0 20px 40px rgba(0,0,0,.4);
+      padding: 22px;
+      position:relative;
+      overflow:hidden;
     }
 
-    h1{ color:#ff7aa8 }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    h1{
+      margin: 8px 0 10px;
+      font-size: clamp(28px, 3.2vw, 40px);
+      line-height:1.1;
+      letter-spacing: .2px;
+    }
+
+    .sub{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .typebox{
+      margin-top: 14px;
+      padding: 14px 14px 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      min-height: 190px;
+    }
+    .type{
+      font-size: 16px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+    .cursor{
+      display:inline-block;
+      width: 10px;
+      height: 18px;
+      transform: translateY(3px);
+      border-radius: 2px;
+      background: rgba(255,255,255,.85);
+      margin-left: 2px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink{ 0%,49%{opacity:1} 50%,100%{opacity:.15} }
+
+    .actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      align-items:center;
+    }
 
     button{
-      margin-top:15px;
-      padding:12px 18px;
-      border:none;
-      border-radius:999px;
-      background:#ff7aa8;
-      color:#111;
-      font-weight:700;
-      cursor:pointer;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 14px;
+      font-weight: 650;
+      font-size: 14px;
+      cursor: pointer;
+      color: #111;
+      background: linear-gradient(180deg, #fff, #ffe7ee);
+      box-shadow: 0 10px 25px rgba(255,77,141,.22);
+      transition: transform .08s ease, filter .2s ease;
+    }
+    button:hover{ filter: brightness(1.02) }
+    button:active{ transform: scale(.98) }
+    .secondary{
+      background: rgba(255,255,255,.1);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: none;
+    }
+
+    .note{
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+    }
+
+    /* Right panel */
+    .right h2{
+      margin: 6px 0 10px;
+      font-size: 18px;
+      color: rgba(255,255,255,.92);
+    }
+    .gift{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      padding: 14px;
+      display:grid;
+      gap: 12px;
+    }
+    .gift .row{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content: space-between;
     }
 
     .gallery{
       display:grid;
-      grid-template-columns: repeat(3,1fr);
-      gap:10px;
-      margin-top:10px;
-      display:none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
-
-    .photo{
-      aspect-ratio:1/1;
-      border-radius:14px;
-      background-size:cover;
-      background-position:center;
+    .ph{
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      background:
+        radial-gradient(120px 120px at 30% 25%, rgba(255,255,255,.18), transparent 65%),
+        linear-gradient(140deg, rgba(255,77,141,.18), rgba(139,92,246,.14));
+      border: 1px solid rgba(255,255,255,.14);
       position:relative;
+      overflow:hidden;
     }
-
-    .photo span{
+    .ph span{
       position:absolute;
-      bottom:6px;
-      left:6px;
-      right:6px;
-      font-size:12px;
-      background:rgba(0,0,0,.4);
-      border-radius:999px;
-      padding:4px 8px;
+      inset:auto 10px 10px 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      background: rgba(0,0,0,.18);
+      padding: 6px 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.14);
       text-align:center;
+      overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
     }
 
-    @media(max-width:800px){
-      .container{ grid-template-columns:1fr }
-      .gallery{ grid-template-columns: repeat(2,1fr); }
+    .reveal{
+      display:none;
+      animation: pop .35s ease both;
     }
+    .reveal.show{ display:block; }
+    @keyframes pop{
+      from{ transform: translateY(10px); opacity:0 }
+      to{ transform: translateY(0); opacity:1 }
+    }
+
+    .quote{
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.86);
+      line-height:1.65;
+      font-size: 14px;
+    }
+
+    .footer{
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,.55);
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Floating hearts */
+    .heart{
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      pointer-events:none;
+      transform: translate(-50%,-50%) rotate(45deg);
+      opacity: .95;
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,.25));
+      animation: floatUp var(--dur) linear forwards;
+      z-index: 5;
+    }
+    .heart:before,.heart:after{
+      content:"";
+      position:absolute;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--c);
+    }
+    .heart{ background: var(--c); }
+    .heart:before{ left: -7px; }
+    .heart:after{ top: -7px; }
+
+    @keyframes floatUp{
+      0%{ transform: translate(var(--x), var(--y)) rotate(45deg) scale(var(--s)); opacity: .95 }
+      80%{ opacity: .9 }
+      100%{ transform: translate(calc(var(--x) + var(--drift)), calc(var(--y) - 380px)) rotate(45deg) scale(calc(var(--s) * .9)); opacity: 0 }
+    }
+
+    /* Small screens */
+    @media (max-width: 860px){
+      .wrap{ grid-template-columns: 1fr; margin-top: 24px; }
+    }
+
+    /* Tiny toast */
+    .toast{
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 12px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.9);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      font-size: 13px;
+      display:none;
+      z-index: 10;
+    }
+    .toast.show{ display:block; animation: pop .25s ease both; }
   </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <section class="card left">
+      <div class="badge">💌 Valentine Edition • Made with love</div>
+      <h1>
+        Gửi <span id="herName" style="color:var(--accent2)">{{TÊN_BẠN_GÁI}}</span>,
+        <span style="color:var(--accent)">anh có một điều muốn nói…</span>
+      </h1>
+      <p class="sub">
+        Đây là một trang web nho nhỏ anh tự viết. Nếu em đọc đến cuối, hãy bấm <b>“Mở món quà”</b> nhé 😉
+      </p>
 
-<div class="container">
-
-  <!-- BÊN TRÁI -->
-  <div class="card">
-    <h1>Gửi Bé yêu 💖</h1>
-    <p>
-      Anh không giỏi nói những điều sến súa… nên anh viết bằng code.<br><br>
-      Valentine này anh chỉ muốn nói:<br>
-      <b>Anh yêu em. Nhiều hơn những gì anh thể hiện.</b>
-    </p>
-
-    <button id="openGift">🎁 Mở món quà</button>
-  </div>
-
-  <!-- BÊN PHẢI -->
-  <div class="card">
-    <h3>📸 Những khoảnh khắc của tụi mình</h3>
-    <div class="gallery" id="gallery"></div>
-  </div>
-
-</div>
-
-<!-- ===== NHẠC ===== -->
-<audio id="bgm" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<!-- ===== JS ===== -->
-<script>
-  const photos = [
-    {src:"images/img1.jpg", text:"Kỷ niệm đầu tiên"},
-    {src:"images/img2.jpg", text:"Hôm đó em cười rất đẹp"},
-    {src:"images/img3.jpg", text:"Đi chơi cùng nhau"},
-    {src:"images/img4.jpg", text:"Một ngày bình yên"},
-    {src:"images/img5.jpg", text:"Chỉ cần là em"},
-    {src:"images/img6.jpg", text:"Valentine này 💖"}
-  ];
-
-  const gallery = document.getElementById("gallery");
-  const btn = document.getElementById("openGift");
-  const bgm = document.getElementById("bgm");
-
-  btn.onclick = () => {
-    gallery.innerHTML = photos.map(p => `
-      <div class="photo" style="background-image:url('${p.src}')">
-        <span>${p.text}</span>
+      <div class="typebox">
+        <div class="type">
+          <span id="typed"></span><span class="cursor"></span>
+        </div>
       </div>
-    `).join("");
 
-    gallery.style.display = "grid";
-    bgm.play();
-    btn.innerText = "💝 Đã mở rồi đó";
-  };
-</script>
+      <div class="actions">
+        <button id="btnGift">🎁 Mở món quà</button>
+        <button class="secondary" id="btnMoreHearts">💗 Thêm tim</button>
+        <button class="secondary" id="btnMusic">🎶 Bật nhạc</button>
+        <span class="note">Tip: click vào nền cũng sẽ tạo tim bay.</span>
+      </div>
+    </section>
 
+    <aside class="card right">
+      <h2>Hộp quà của tụi mình</h2>
+
+      <div class="gift">
+        <div class="row">
+          <div style="color:rgba(255,255,255,.85);font-weight:700">📸 3 khoảnh khắc</div>
+          <div class="note" id="today"></div>
+        </div>
+
+        <div class="gallery reveal" id="gallery">
+          <!-- Placeholder: bạn có thể thay bằng ảnh thật -->
+          <div class="ph"><span>Kỷ niệm #1</span></div>
+          <div class="ph"><span>Kỷ niệm #2</span></div>
+          <div class="ph"><span>Kỷ niệm #3</span></div>
+        </div>
+
+        <div class="quote reveal" id="quote">
+          “Cảm ơn em vì đã ở đây. Anh không hứa mọi thứ sẽ hoàn hảo,
+          nhưng anh hứa sẽ luôn tử tế với trái tim của em.”
+          <div style="margin-top:10px;color:rgba(255,255,255,.68)">
+            — <span id="yourName">{{TÊN_BẠN}}</span>
+          </div>
+        </div>
+
+        <div class="reveal" id="dateIdea">
+          <div class="quote" style="border-style:dashed">
+            📅 <b>Voucher hẹn hò</b><br/>
+            Em chọn 1 trong 3: đi ăn món em thích • đi dạo + chụp ảnh • xem phim + trà sữa.
+            <br/><br/>
+            Mật khẩu để nhận: <b id="pw">LOVE</b>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span>✨ Nhấn “Mở món quà” để hiện mọi thứ</span>
+          <span>🫶 Made by <span id="sign">{{TÊN_BẠN}}</span></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast">Đã bật nhạc 🎶</div>
+
+  <!-- Nhạc nền (tuỳ chọn): thay src bằng file mp3 của bạn -->
+  <audio id="bgm" loop>
+    <!-- Ví dụ: <source src="music.mp3" type="audio/mpeg"> -->
+  </audio>
+
+  <script>
+    // ====== TÙY BIẾN NHANH Ở ĐÂY ======
+    const CONFIG = {
+      herName: "Bé yêu",
+      yourName: "Quốc",
+      password: "LOVE", // có thể đổi thành ngày kỷ niệm, vd: "0302"
+      letter: [
+        "Hi em,\n",
+        "Anh không giỏi nói những điều sến súa… nên anh viết bằng code.\n",
+        "Từ lúc có em, những ngày bình thường tự nhiên trở nên đáng nhớ.\n",
+        "Anh thích cách em cười, cách em nói chuyện, và cả những lúc em im lặng.\n\n",
+        "Valentine này anh chỉ muốn nói:\n",
+        "Cảm ơn em vì đã chọn ở bên anh.\n",
+        "Anh yêu em. Nhiều hơn những gì anh thể hiện.\n\n",
+        "— người luôn đứng về phía em ❤️"
+      ].join("")
+    };
+
+    // ====== APPLY CONFIG ======
+    const elHer = document.getElementById("herName");
+    const elYou = document.getElementById("yourName");
+    const elSign = document.getElementById("sign");
+    const elPw = document.getElementById("pw");
+    elHer.textContent = CONFIG.herName;
+    elYou.textContent = CONFIG.yourName;
+    elSign.textContent = CONFIG.yourName;
+    elPw.textContent = CONFIG.password;
+
+    // Date label
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2,'0');
+    const mm = String(today.getMonth()+1).padStart(2,'0');
+    const yyyy = today.getFullYear();
+    document.getElementById("today").textContent = `${dd}/${mm}/${yyyy}`;
+
+    // ====== Typewriter ======
+    const typedEl = document.getElementById("typed");
+    const fullText = CONFIG.letter;
+    let idx = 0;
+    let typing = true;
+
+    function typeTick(){
+      if(!typing) return;
+      // speed varies a bit to feel human
+      const ch = fullText[idx];
+      if (ch !== undefined) {
+        typedEl.textContent += ch;
+        idx++;
+        const base = (ch === "\n") ? 120 : 26;
+        const jitter = Math.random() * 60;
+        setTimeout(typeTick, base + jitter);
+      } else {
+        typing = false;
+        // a little celebration
+        burstHearts(14);
+      }
+    }
+    typeTick();
+
+    // ====== Hearts ======
+    const COLORS = ["#ff4d8d","#ff7aa8","#ffd1dc","#b794f4","#ffb3c7","#ff5d8f"];
+    function spawnHeart(x,y){
+      const h = document.createElement("div");
+      h.className = "heart";
+      const c = COLORS[Math.floor(Math.random()*COLORS.length)];
+      const s = (0.7 + Math.random()*1.2).toFixed(2);
+      const dur = (1.8 + Math.random()*1.6).toFixed(2) + "s";
+      const drift = ((Math.random()*160)-80).toFixed(0) + "px";
+
+      h.style.setProperty("--c", c);
+      h.style.setProperty("--s", s);
+      h.style.setProperty("--dur", dur);
+      h.style.setProperty("--drift", drift);
+      h.style.setProperty("--x", x + "px");
+      h.style.setProperty("--y", y + "px");
+
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 3500);
+    }
+
+    function burstHearts(n=10){
+      const cx = window.innerWidth/2;
+      const cy = Math.min(window.innerHeight*0.55, 420);
+      for(let i=0;i<n;i++){
+        setTimeout(()=>{
+          spawnHeart(cx + (Math.random()*140-70), cy + (Math.random()*80-40));
+        }, i*35);
+      }
+    }
+
+    document.addEventListener("click", (e)=>{
+      // avoid buttons stacking too many
+      if (e.target.tagName.toLowerCase() === "button") return;
+      spawnHeart(e.clientX, e.clientY);
+    });
+
+    document.getElementById("btnMoreHearts").addEventListener("click", ()=>{
+      burstHearts(18);
+    });
+
+    // ====== Gift reveal ======
+    const btnGift = document.getElementById("btnGift");
+    const gallery = document.getElementById("gallery");
+    const quote = document.getElementById("quote");
+    const dateIdea = document.getElementById("dateIdea");
+
+    let opened = false;
+    btnGift.addEventListener("click", ()=>{
+      if(!opened){
+        opened = true;
+        gallery.classList.add("show");
+        quote.classList.add("show");
+        dateIdea.classList.add("show");
+        burstHearts(26);
+        btnGift.textContent = "💝 Đã mở rồi đó";
+      } else {
+        burstHearts(10);
+      }
+    });
+
+    // ====== Music toggle (optional) ======
+    const bgm = document.getElementById("bgm");
+    const btnMusic = document.getElementById("btnMusic");
+    const toast = document.getElementById("toast");
+    let musicOn = false;
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"), 1200);
+    }
+
+    btnMusic.addEventListener("click", async ()=>{
+      try{
+        if(!musicOn){
+          // If no source is set, we still toggle UI nicely
+          await bgm.play();
+          musicOn = true;
+          btnMusic.textContent = "🔇 Tắt nhạc";
+          showToast("Đã bật nhạc 🎶");
+        }else{
+          bgm.pause();
+          musicOn = false;
+          btnMusic.textContent = "🎶 Bật nhạc";
+          showToast("Đã tắt nhạc");
+        }
+      }catch(err){
+        // Autoplay policy or missing audio source
+        musicOn = false;
+        btnMusic.textContent = "🎶 Bật nhạc";
+        showToast("Chưa có file nhạc (hoặc trình duyệt chặn autoplay)");
+      }
+    });
+
+    // Gentle ambient hearts
+    setInterval(()=>{
+      const x = Math.random() * window.innerWidth;
+      const y = window.innerHeight - 20;
+      spawnHeart(x, y);
+    }, 900);
+  </script>
 </body>
 </html>
-
