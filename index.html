@@ -353,7 +353,7 @@
   <script>
     // ====== TÙY BIẾN NHANH Ở ĐÂY ======
     const CONFIG = {
-      herName: "Bé yêu",
+      herName: "Em Bé Tutu",
       yourName: "Quốc",
       password: "LOVE",
       letter: [
@@ -454,15 +454,18 @@
     });
 
     // ====== Render photos ======
-    const gallery = document.getElementById("gallery");
-    function renderPhotos(){
-      if(!CONFIG.photos || CONFIG.photos.length === 0) return;
-      gallery.innerHTML = CONFIG.photos.map((p, i) => `
-        <div class="ph photo" style="background-image:url('${p.src}')">
-          <span>${p.caption || `Kỷ niệm #${i+1}`}</span>
-        </div>
-      `).join("");
-    }
+   const gallery = document.getElementById("gallery");
+
+function renderPhotos(){
+  if(!CONFIG.photos || CONFIG.photos.length === 0) return;
+
+  gallery.innerHTML = CONFIG.photos.map((p, i) => `
+    <div class="ph photo" style="background-image:url('${p.src}')">
+      <span>${p.caption || `Kỷ niệm #${i+1}`}</span>
+    </div>
+  `).join("");
+}
+
 
     // ====== Gift reveal ======
     const btnGift = document.getElementById("btnGift");
@@ -527,3 +530,4 @@
   </script>
 </body>
 </html>
+
