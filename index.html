@@ -189,6 +189,11 @@
       text-overflow:ellipsis;
     }
 
+    .ph.photo{
+      background-size: cover;
+      background-position: center;
+    }
+
     .reveal{
       display:none;
       animation: pop .35s ease both;
@@ -280,7 +285,7 @@
     <section class="card left">
       <div class="badge">💌 Valentine Edition • Made with love</div>
       <h1>
-        Gửi <span id="herName" style="color:var(--accent2)">{{TÊN_BẠN_GÁI}}</span>,
+        Gửi <span id="herName" style="color:var(--accent2)">Bé yêu</span>,
         <span style="color:var(--accent)">anh có một điều muốn nói…</span>
       </h1>
       <p class="sub">
@@ -306,22 +311,18 @@
 
       <div class="gift">
         <div class="row">
-          <div style="color:rgba(255,255,255,.85);font-weight:700">📸 3 khoảnh khắc</div>
+          <div style="color:rgba(255,255,255,.85);font-weight:700">📸 Nhiều khoảnh khắc</div>
           <div class="note" id="today"></div>
         </div>
 
-        <div class="gallery reveal" id="gallery">
-          <!-- Placeholder: bạn có thể thay bằng ảnh thật -->
-          <div class="ph"><span>Kỷ niệm #1</span></div>
-          <div class="ph"><span>Kỷ niệm #2</span></div>
-          <div class="ph"><span>Kỷ niệm #3</span></div>
-        </div>
+        <!-- Gallery sẽ được đổ ảnh bằng JS -->
+        <div class="gallery reveal" id="gallery"></div>
 
         <div class="quote reveal" id="quote">
           “Cảm ơn em vì đã ở đây. Anh không hứa mọi thứ sẽ hoàn hảo,
           nhưng anh hứa sẽ luôn tử tế với trái tim của em.”
           <div style="margin-top:10px;color:rgba(255,255,255,.68)">
-            — <span id="yourName">{{TÊN_BẠN}}</span>
+            — <span id="yourName">Quốc</span>
           </div>
         </div>
 
@@ -336,7 +337,7 @@
 
         <div class="footer">
           <span>✨ Nhấn “Mở món quà” để hiện mọi thứ</span>
-          <span>🫶 Made by <span id="sign">{{TÊN_BẠN}}</span></span>
+          <span>🫶 Made by <span id="sign">Quốc</span></span>
         </div>
       </div>
     </aside>
@@ -344,9 +345,9 @@
 
   <div class="toast" id="toast">Đã bật nhạc 🎶</div>
 
-  <!-- Nhạc nền (tuỳ chọn): thay src bằng file mp3 của bạn -->
+  <!-- Nhạc nền: dùng file music.mp3 trong repo -->
   <audio id="bgm" loop>
-    <!-- Ví dụ: <source src="music.mp3" type="audio/mpeg"> -->
+    <source src="music.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -354,7 +355,7 @@
     const CONFIG = {
       herName: "Bé yêu",
       yourName: "Quốc",
-      password: "LOVE", // có thể đổi thành ngày kỷ niệm, vd: "0302"
+      password: "LOVE",
       letter: [
         "Hi em,\n",
         "Anh không giỏi nói những điều sến súa… nên anh viết bằng code.\n",
@@ -364,7 +365,13 @@
         "Cảm ơn em vì đã chọn ở bên anh.\n",
         "Anh yêu em. Nhiều hơn những gì anh thể hiện.\n\n",
         "— người luôn đứng về phía em ❤️"
-      ].join("")
+      ].join(""),
+      // Thêm bao nhiêu ảnh cũng được (nhớ upload vào thư mục images/)
+      photos: [
+        { src: "images/img1.jpg", caption: "Kỷ niệm #1" },
+        { src: "images/img2.jpg", caption: "Kỷ niệm #2" },
+        { src: "images/img3.jpg", caption: "Kỷ niệm #3" }
+      ]
     };
 
     // ====== APPLY CONFIG ======
@@ -392,7 +399,6 @@
 
     function typeTick(){
       if(!typing) return;
-      // speed varies a bit to feel human
       const ch = fullText[idx];
       if (ch !== undefined) {
         typedEl.textContent += ch;
@@ -402,7 +408,6 @@
         setTimeout(typeTick, base + jitter);
       } else {
         typing = false;
-        // a little celebration
         burstHearts(14);
       }
     }
@@ -440,7 +445,6 @@
     }
 
     document.addEventListener("click", (e)=>{
-      // avoid buttons stacking too many
       if (e.target.tagName.toLowerCase() === "button") return;
       spawnHeart(e.clientX, e.clientY);
     });
@@ -449,32 +453,45 @@
       burstHearts(18);
     });
 
+    // ====== Render photos ======
+    const gallery = document.getElementById("gallery");
+    function renderPhotos(){
+      if(!CONFIG.photos || CONFIG.photos.length === 0) return;
+      gallery.innerHTML = CONFIG.photos.map((p, i) => `
+        <div class="ph photo" style="background-image:url('${p.src}')">
+          <span>${p.caption || `Kỷ niệm #${i+1}`}</span>
+        </div>
+      `).join("");
+    }
+
     // ====== Gift reveal ======
     const btnGift = document.getElementById("btnGift");
-    const gallery = document.getElementById("gallery");
     const quote = document.getElementById("quote");
     const dateIdea = document.getElementById("dateIdea");
+    const bgm = document.getElementById("bgm");
+    const btnMusic = document.getElementById("btnMusic");
+    const toast = document.getElementById("toast");
 
     let opened = false;
     btnGift.addEventListener("click", ()=>{
       if(!opened){
         opened = true;
+        renderPhotos();
         gallery.classList.add("show");
         quote.classList.add("show");
         dateIdea.classList.add("show");
         burstHearts(26);
         btnGift.textContent = "💝 Đã mở rồi đó";
+
+        // bật nhạc khi mở quà (trình duyệt cho phép vì có click)
+        bgm.play().catch(()=>{});
       } else {
         burstHearts(10);
       }
     });
 
-    // ====== Music toggle (optional) ======
-    const bgm = document.getElementById("bgm");
-    const btnMusic = document.getElementById("btnMusic");
-    const toast = document.getElementById("toast");
+    // ====== Music toggle ======
     let musicOn = false;
-
     function showToast(msg){
       toast.textContent = msg;
       toast.classList.add("show");
@@ -484,7 +501,6 @@
     btnMusic.addEventListener("click", async ()=>{
       try{
         if(!musicOn){
-          // If no source is set, we still toggle UI nicely
           await bgm.play();
           musicOn = true;
           btnMusic.textContent = "🔇 Tắt nhạc";
@@ -496,10 +512,9 @@
           showToast("Đã tắt nhạc");
         }
       }catch(err){
-        // Autoplay policy or missing audio source
         musicOn = false;
         btnMusic.textContent = "🎶 Bật nhạc";
-        showToast("Chưa có file nhạc (hoặc trình duyệt chặn autoplay)");
+        showToast("Chưa có file nhạc / bị chặn autoplay");
       }
     });
 
