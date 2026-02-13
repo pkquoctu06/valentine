@@ -692,28 +692,26 @@
     });
 
     // ====== Render photos ======
-    const gallery = document.getElementById("gallery");
+    // ====== Render photos ======
+const gallery = document.getElementById("gallery");
 
-   gallery.innerHTML = CONFIG.photos.map((p, i) => `
-  <div class="ph photo"
-       data-src="${p.src}"
-       data-cap="${(p.caption || `Kỷ niệm #${i+1}`).replace(/"/g,'&quot;')}">
+function renderPhotos(){
+  gallery.innerHTML = CONFIG.photos.map((p, i) => `
+    <div class="ph photo"
+         data-src="${p.src}"
+         data-cap="${(p.caption || `Kỷ niệm #${i+1}`).replace(/"/g,'&quot;')}">
 
-    <div class="imgbox"
-         style="background-image:url('${p.src}')">
-    </div>
+      <div class="imgbox" style="background-image:url('${p.src}')"></div>
 
-    <div class="cap">
-      <div class="text">
-        ${p.caption || `Kỷ niệm #${i+1}`}
+      <div class="cap">
+        <div class="text">${p.caption || `Kỷ niệm #${i+1}`}</div>
+        <div class="tag">#${i+1}</div>
       </div>
-      <div class="tag">
-        #${i+1}
-      </div>
-    </div>
 
-  </div>
-`).join("");
+    </div>
+  `).join("");
+}
+
 
 
 
@@ -874,8 +872,29 @@
       const cap = tile.getAttribute("data-cap") || "";
       if(src) openLightbox(src, cap);
     });
+    function updateCountdown(){
+  const now = new Date();
+  let target = new Date(now.getFullYear(), 1, 14, 0, 0, 0);
+  if(now > target){
+    target = new Date(now.getFullYear() + 1, 1, 14, 0, 0, 0);
+  }
+  const diff = target - now;
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("cdDays").textContent = String(days).padStart(2,"0");
+  document.getElementById("cdHours").textContent = String(hours).padStart(2,"0");
+  document.getElementById("cdMinutes").textContent = String(minutes).padStart(2,"0");
+  document.getElementById("cdSeconds").textContent = String(seconds).padStart(2,"0");
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>
+
 
 
