@@ -694,28 +694,27 @@
     // ====== Render photos ======
     const gallery = document.getElementById("gallery");
 
-    function renderPhotos(){
-      if(!CONFIG.photos || CONFIG.photos.length === 0) return;
+   gallery.innerHTML = CONFIG.photos.map((p, i) => `
+  <div class="ph photo"
+       data-src="${p.src}"
+       data-cap="${(p.caption || `Kỷ niệm #${i+1}`).replace(/"/g,'&quot;')}">
 
-      gallery.innerHTML = CONFIG.photos.map((p, i) => `
-       <div class="ph photo"
-     data-src="${p.src}"
-     data-cap="${(p.caption||`Kỷ niệm #${i+1}`).replace(/"/g,'&quot;')}">
-
-  <div class="imgbox"
-       style="background-image:url('${p.src}')">
-  </div>
-
-  <div class="cap">
-    <div class="text">
-      ${p.caption || `Kỷ niệm #${i+1}`}
+    <div class="imgbox"
+         style="background-image:url('${p.src}')">
     </div>
-    <div class="tag">
-      #${i+1}
-    </div>
-  </div>
 
-</div>
+    <div class="cap">
+      <div class="text">
+        ${p.caption || `Kỷ niệm #${i+1}`}
+      </div>
+      <div class="tag">
+        #${i+1}
+      </div>
+    </div>
+
+  </div>
+`).join("");
+
 
 
     // ====== Gift reveal (WOW) ======
@@ -878,4 +877,5 @@
   </script>
 </body>
 </html>
+
 
