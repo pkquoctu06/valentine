@@ -722,11 +722,12 @@
 
     // ====== Render photos ======
 const gallery = document.getElementById("gallery");
+
 function renderPhotos(){
   gallery.innerHTML = CONFIG.photos.map((p, i) => `
     <div class="ph photo"
          data-src="${p.src}"
-         data-cap="${p.caption}">
+         data-cap="${String(p.caption).replace(/"/g,'&quot;')}">
 
       <div class="imgbox" style="--bg:url('${p.src}')">
         <img src="${p.src}" alt="">
@@ -741,8 +742,6 @@ function renderPhotos(){
   `).join("");
 }
 
-
-}
 
 
 
@@ -927,6 +926,7 @@ setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>
+
 
 
 
