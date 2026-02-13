@@ -158,42 +158,89 @@
       justify-content: space-between;
     }
 
-    .gallery{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-    .ph{
-      aspect-ratio: 1 / 1;
-      border-radius: 16px;
-      background:
-        radial-gradient(120px 120px at 30% 25%, rgba(255,255,255,.18), transparent 65%),
-        linear-gradient(140deg, rgba(255,77,141,.18), rgba(139,92,246,.14));
-      border: 1px solid rgba(255,255,255,.14);
-      position:relative;
-      overflow:hidden;
-      cursor: pointer;
-    }
-    .ph span{
-      position:absolute;
-      inset:auto 10px 10px 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,.72);
-      background: rgba(0,0,0,.18);
-      padding: 6px 8px;
-      border-radius: 999px;
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,.14);
-      text-align:center;
-      overflow:hidden;
-      white-space:nowrap;
-      text-overflow:ellipsis;
-    }
+    /* ===== Gallery đẹp kiểu album ===== */
+.gallery{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
 
-    .ph.photo{
-      background-size: cover;
-      background-position: center;
-    }
+/* mỗi item là 1 card */
+.ph{
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  overflow:hidden;
+  box-shadow: 0 14px 38px rgba(0,0,0,.28);
+  transform: translateY(6px);
+  opacity: 0;
+  animation: pop2 .55s ease forwards;
+  cursor: pointer;
+}
+
+/* khung ảnh dọc đẹp */
+.ph.photo{
+  background: none;
+}
+
+.ph .imgbox{
+  width: 100%;
+  aspect-ratio: 3 / 4;     /* ảnh dọc đẹp như album */
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px 18px 0 0;
+  position: relative;
+}
+
+/* gradient nhẹ cho chữ nổi */
+.ph .imgbox::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0 0;
+  height: 44%;
+  background: linear-gradient(to top, rgba(0,0,0,.55), transparent);
+}
+
+/* caption đưa xuống dưới như Instagram */
+.ph .cap{
+  padding: 12px 12px 14px;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap: 10px;
+}
+
+.ph .cap .text{
+  font-size: 13px;
+  color: rgba(255,255,255,.88);
+  font-weight: 650;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+}
+
+.ph .cap .tag{
+  font-size: 12px;
+  color: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.08);
+  padding: 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* hover mượt */
+.ph:hover{
+  transform: translateY(0) scale(1.01);
+  box-shadow: 0 18px 54px rgba(0,0,0,.38);
+}
+
+/* animation riêng */
+@keyframes pop2{
+  from{ transform: translateY(14px); opacity:0; }
+  to{ transform: translateY(0); opacity:1; }
+}
+
 
     .reveal{
       display:none;
@@ -395,6 +442,36 @@
       cursor:pointer;
       font-weight: 750;
     }
+    /* ===== Countdown ===== */
+.countdown{
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.cd-item{
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  padding: 10px 8px;
+  text-align:center;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+}
+
+.cd-item .num{
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent2);
+}
+
+.cd-item .label{
+  font-size: 12px;
+  color: rgba(255,255,255,.75);
+  margin-top: 4px;
+}
+
   </style>
 </head>
 
@@ -432,6 +509,25 @@
           <div style="color:rgba(255,255,255,.85);font-weight:700">📸 Nhiều khoảnh khắc</div>
           <div class="note" id="today"></div>
         </div>
+        <div class="countdown" id="countdown">
+  <div class="cd-item">
+    <div class="num" id="cdDays">00</div>
+    <div class="label">Ngày</div>
+  </div>
+  <div class="cd-item">
+    <div class="num" id="cdHours">00</div>
+    <div class="label">Giờ</div>
+  </div>
+  <div class="cd-item">
+    <div class="num" id="cdMinutes">00</div>
+    <div class="label">Phút</div>
+  </div>
+  <div class="cd-item">
+    <div class="num" id="cdSeconds">00</div>
+    <div class="label">Giây</div>
+  </div>
+</div>
+
 
         <!-- Gallery sẽ được đổ ảnh bằng JS -->
         <div class="gallery reveal" id="gallery"></div>
@@ -602,12 +698,25 @@
       if(!CONFIG.photos || CONFIG.photos.length === 0) return;
 
       gallery.innerHTML = CONFIG.photos.map((p, i) => `
-        <div class="ph photo" data-src="${p.src}" data-cap="${(p.caption||`Kỷ niệm #${i+1}`).replace(/"/g,'&quot;')}"
-             style="background-image:url('${p.src}')">
-          <span>${p.caption || `Kỷ niệm #${i+1}`}</span>
-        </div>
-      `).join("");
-    }
+       <div class="ph photo"
+     data-src="${p.src}"
+     data-cap="${(p.caption||`Kỷ niệm #${i+1}`).replace(/"/g,'&quot;')}">
+
+  <div class="imgbox"
+       style="background-image:url('${p.src}')">
+  </div>
+
+  <div class="cap">
+    <div class="text">
+      ${p.caption || `Kỷ niệm #${i+1}`}
+    </div>
+    <div class="tag">
+      #${i+1}
+    </div>
+  </div>
+
+</div>
+
 
     // ====== Gift reveal (WOW) ======
     const btnGift = document.getElementById("btnGift");
@@ -769,3 +878,4 @@
   </script>
 </body>
 </html>
+
